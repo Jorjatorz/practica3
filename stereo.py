@@ -169,6 +169,20 @@ def main():
     imshow(img2)
     ppl.show()
 
+    # Ejercicio 4
+    F = projmat2f(P1, P2)
+
+
+def projmat2f(P1, P2):
+    A = P1[:, [0,1,2]]
+    b = P1[:,[3]]
+    B = P2[:, [0,1,2]]
+    d = P2[:,[3]]
+
+    from numpy.linalg import inv
+
+    return np.matmul(inv(B).transpose(), np.matmul(inv(B), d) - np.matmul(inv(A), b)) * inv(A)
+
 
 if __name__ == "__main__":
     main()

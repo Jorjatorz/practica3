@@ -20,7 +20,6 @@ def plothline_TODO(line, axes=None):
         line will be plotted in the active axis.
     """
 
-    ppl.clf()
     if axes == None:
         axes = ppl.gca()
 
@@ -49,8 +48,6 @@ def plothline_TODO(line, axes=None):
     axes.plot([0, x1], [p0, p1])
 
     axes.axis([x0, x1, y0, y1])
-
-    ppl.show()
 
 
 def plot_epipolar_lines_TODO(image1, image2, F):
@@ -84,9 +81,10 @@ def plot_epipolar_lines_TODO(image1, image2, F):
         ax1.plot(point[0], point[1], '.r')
 
         # TODO: Determine the epipolar line.
+        l = np.matmul(F, point.reshape(3, 1))
 
         # TODO: Plot the epipolar line with plothline (the parameter 'axes' should be ax2).
-        # plothline(..., axes=ax2)
+        plothline_TODO(l, axes=ax2)
 
         ppl.draw()
         # Ask for a new point.
@@ -183,6 +181,8 @@ def main():
 
     # Ejercicio 4
     F = projmat2f(P1, P2)
+
+    plot_epipolar_lines_TODO(img1, img2, F)
 
     # Ejercicio 5
     P1_f, P2_f = f2projmat(F)

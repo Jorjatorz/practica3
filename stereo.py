@@ -200,9 +200,9 @@ def projmat2f(P1, P2):
     Ainv = inv(A)
     Binv = inv(B)
 
-    vectorTrans = np.matmul(Binv.transpose(), np.matmul(Binv, d) - np.matmul(Ainv, b))
+    skewM = np.matmul(Binv.transpose(), misc.skew(np.matmul(Binv, d) - np.matmul(Ainv, b)))
 
-    return np.matmul(misc.skew(vectorTrans), inv(A))
+    return np.matmul(skewM, inv(A))
 
 def f2projmat(F):
     # Obtenemos los epipolos dado F

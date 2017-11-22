@@ -19,6 +19,8 @@ def plothline_TODO(line, axes=None):
         Axes where the line should be plotted. If not given,
         line will be plotted in the active axis.
     """
+
+    ppl.clf()
     if axes == None:
         axes = ppl.gca()
 
@@ -35,10 +37,20 @@ def plothline_TODO(line, axes=None):
     # TODO: Compute the intersection of the line with the image
     # borders.
 
+    # Obtenemos los parametros de la recta - La formula de la recta es ax + yb + c = 0 en coordenadas homogenas [a,b,c]. De ahi se puede sacar la pendiente y la interseccion con y
+    m = -line[0]/line[1]
+    b = -line[2]/line[1]
+
+    # Calculamos intersecciones con los bordes
+    p0 = x0 * m + b
+    p1 = x1 * m + b
+
     # TODO: Plot the line with axes.plot.
-    # axes.plot(...)
+    axes.plot([0, x1], [p0, p1])
 
     axes.axis([x0, x1, y0, y1])
+
+    ppl.show()
 
 
 def plot_epipolar_lines_TODO(image1, image2, F):

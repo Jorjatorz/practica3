@@ -182,10 +182,12 @@ def main():
     # Ejercicio 4
     F = projmat2f(P1, P2)
 
-    plot_epipolar_lines_TODO(img1, img2, F)
-
     # Ejercicio 5
     P1_f, P2_f = f2projmat(F)
+
+    # Ejercicio 6,7,8
+    plot_epipolar_lines_TODO(img1, img2, F)
+    plot_epipolar_lines_TODO(img2, img1, F)
 
 
 def projmat2f(P1, P2):

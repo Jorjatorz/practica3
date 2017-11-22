@@ -172,6 +172,9 @@ def main():
     # Ejercicio 4
     F = projmat2f(P1, P2)
 
+    # Ejercicio 5
+    P1_f, P2_f = f2projmat(F)
+
 
 def projmat2f(P1, P2):
     A = P1[:, [0,1,2]]
@@ -187,6 +190,19 @@ def projmat2f(P1, P2):
 
     return np.matmul(misc.skew(vectorTrans), inv(A))
 
+def f2projmat(F):
+    # Obtenemos los epipolos dado F
+    i, e = misc.epipoles(F)
+    e = e.reshape(3, 1)
+
+    P1 = np.hstack((np.identity(3), np.array([0, 0, 0]).reshape(3, 1)))
+
+    # Calculamos P2
+    v = np.array([0, 1, 0]).reshape(3, 1)
+    ex = misc.skew(e)
+    P2 = np.hstack((np.matmul(ex, F) + np.matmul(e, v.T), e.reshape(3, 1)))
+
+    return P1, P2
 
 if __name__ == "__main__":
     main()

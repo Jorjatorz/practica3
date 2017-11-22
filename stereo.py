@@ -180,8 +180,12 @@ def projmat2f(P1, P2):
     d = P2[:,[3]]
 
     from numpy.linalg import inv
+    Ainv = inv(A)
+    Binv = inv(B)
 
-    return np.matmul(inv(B).transpose(), np.matmul(inv(B), d) - np.matmul(inv(A), b)) * inv(A)
+    vectorTrans = np.matmul(Binv.transpose(), np.matmul(Binv, d) - np.matmul(Ainv, b))
+
+    return np.matmul(misc.skew(vectorTrans), inv(A))
 
 
 if __name__ == "__main__":

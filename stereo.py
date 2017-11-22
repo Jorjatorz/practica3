@@ -187,7 +187,7 @@ def main():
 
     # Ejercicio 6,7,8
     plot_epipolar_lines_TODO(img1, img2, F)
-    plot_epipolar_lines_TODO(img2, img1, F)
+    plot_epipolar_lines_TODO(img2, img1, F.T)
 
 
 def projmat2f(P1, P2):

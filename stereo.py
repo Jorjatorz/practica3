@@ -175,8 +175,8 @@ def main():
     imshow(img1)
     ppl.show()
 
-    from matplotlib.pyplot import imshow
-    misc.plothom(np.matmul(P2, r))
+    ppl.clf()
+    misc.plothom(np.matmul(P2, r), "o")
     imshow(img2)
     ppl.show()
 

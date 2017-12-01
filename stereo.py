@@ -37,8 +37,8 @@ def plothline_TODO(line, axes=None):
     # borders.
 
     # Obtenemos los parametros de la recta - La formula de la recta es ax + yb + c = 0 en coordenadas homogenas [a,b,c]. De ahi se puede sacar la pendiente y la interseccion con y
-    m = -line[0]/line[1]
-    b = -line[2]/line[1]
+    m = -line[0] / line[1]
+    b = -line[2] / line[1]
 
     # Calculamos intersecciones con los bordes
     p0 = x0 * m + b
@@ -198,16 +198,21 @@ def main():
     O1, O2 = misc.rectify_images(img1, img2, H1,
                                  H2)
     from numpy.linalg import inv
-    F = np.matmul(np.matmul(inv(H2).T,F),inv(H1)) # resultado del ejercicio 9
+    F = np.matmul(np.matmul(inv(H2).T, F), inv(H1))  # resultado del ejercicio 9
     plot_epipolar_lines_TODO(O1, O2, F)
     plot_epipolar_lines_TODO(O2, O1, F.T)
 
+    # Ejercicio 11
+    def localssd(im1, im2, K):
+        from scipy.ndimage import convolve
+        return convolve((im1 - im2) ** 2, np.ones((2 * K + 1, 2 * K + 1)))
+
 
 def projmat2f(P1, P2):
-    A = P1[:, [0,1,2]]
-    b = P1[:,[3]]
-    B = P2[:, [0,1,2]]
-    d = P2[:,[3]]
+    A = P1[:, [0, 1, 2]]
+    b = P1[:, [3]]
+    B = P2[:, [0, 1, 2]]
+    d = P2[:, [3]]
 
     from numpy.linalg import inv
     Ainv = inv(A)
@@ -216,6 +221,7 @@ def projmat2f(P1, P2):
     skewM = np.matmul(Binv.transpose(), misc.skew(np.matmul(Binv, d) - np.matmul(Ainv, b)))
 
     return np.matmul(skewM, inv(A))
+
 
 def f2projmat(F):
     # Obtenemos los epipolos dado F
@@ -230,6 +236,7 @@ def f2projmat(F):
     P2 = np.hstack((np.matmul(ex, F) + np.matmul(e, v.T), e.reshape(3, 1)))
 
     return P1, P2
+
 
 if __name__ == "__main__":
     main()

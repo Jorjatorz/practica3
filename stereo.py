@@ -189,6 +189,19 @@ def main():
     plot_epipolar_lines_TODO(img1, img2, F)
     plot_epipolar_lines_TODO(img2, img1, F.T)
 
+    # Ejercicio 10
+    print('ejercicio 10')
+    img1 = misc.rgb2gray(img1 / 255.0)
+    img2 = misc.rgb2gray(img2 / 255.0)
+    H1, H2 = misc.projmat2rectify(P1, P2,
+                                  img1.shape[:2])
+    O1, O2 = misc.rectify_images(img1, img2, H1,
+                                 H2)
+    from numpy.linalg import inv
+    F = np.matmul(np.matmul(inv(H2).T,F),inv(H1)) # resultado del ejercicio 9
+    plot_epipolar_lines_TODO(O1, O2, F)
+    plot_epipolar_lines_TODO(O2, O1, F.T)
+
 
 def projmat2f(P1, P2):
     A = P1[:, [0,1,2]]

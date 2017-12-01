@@ -165,12 +165,13 @@ def main():
     img2 = imread('./images/minoru_cube3_right.jpg')
     points1, points2 = misc.askpoints(img1, img2)
     r = reconstruct(points1, points2, P1, P2)
-    misc.plot3D(r[0], r[1], r[2])
+    misc.plot3D(r[0], r[1], r[2], "o")
     ppl.show()
 
     # Ejercicio 3
     from matplotlib.pyplot import imshow
-    misc.plothom(np.matmul(P1, r))
+    ppl.clf()
+    misc.plothom(np.matmul(P1, r), "o")
     imshow(img1)
     ppl.show()
 

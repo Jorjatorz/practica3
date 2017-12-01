@@ -207,7 +207,22 @@ def main():
         from scipy.ndimage import convolve
         return convolve((im1 - im2) ** 2, np.ones((2 * K + 1, 2 * K + 1)))
 
+    # Ejercicio 12
+    def ssd_volume(im1, im2, disps, K):
+        # Calculamos disparidades
+        C = []
+        for d in disps:
+            C.append(localssd(im1, np.roll(im2, d, axis=1), K))
 
+        # Juntamos disparidades en una matriz de 3D
+        return np.stack(C, axis=2)
+
+    D = ssd_volume(O1, O2, np.arange(-3, 2), 3)
+
+
+
+
+# Ejercicio 4
 def projmat2f(P1, P2):
     A = P1[:, [0, 1, 2]]
     b = P1[:, [3]]
@@ -222,7 +237,7 @@ def projmat2f(P1, P2):
 
     return np.matmul(skewM, inv(A))
 
-
+# Ejercicio 5
 def f2projmat(F):
     # Obtenemos los epipolos dado F
     i, e = misc.epipoles(F)

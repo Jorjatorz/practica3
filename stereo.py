@@ -219,6 +219,12 @@ def main():
 
     D = ssd_volume(O1, O2, np.arange(-3, 2), 3)
 
+    # Ejercicio 13
+    def optimoDisparidades(D):
+        return np.argmin(D, axis=2)
+
+    etiquetasOptimas = optimoDisparidades(D)
+
 
 
 

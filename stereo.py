@@ -237,5 +237,6 @@ def f2projmat(F):
 
     return P1, P2
 
+
 if __name__ == "__main__":
     main()

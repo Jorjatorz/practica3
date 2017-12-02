@@ -10,7 +10,7 @@ from maxflow.fastmin import aexpansion_grid_step
 
 def plothline_TODO(line, axes=None):
     """Plot a line given its homogeneous coordinates.
-    
+
     Parameters
     ----------
     line : array_like
@@ -52,7 +52,7 @@ def plothline_TODO(line, axes=None):
 
 def plot_epipolar_lines_TODO(image1, image2, F):
     """Ask for points in one image and draw the epipolar lines for those points.
-    
+
     Parameters
     ----------
     image1 : array_like
@@ -98,7 +98,7 @@ def plot_correspondences_TODO(image1, image2, S, H1, H2):
     """
     Ask for points in the first image and plot their correspondences in
     the second image.
-    
+
     Parameters
     ----------
     image1, image2 : array_like
@@ -218,7 +218,8 @@ def main():
         # Juntamos disparidades en una matriz de 3D
         return np.stack(C, axis=2)
 
-    D = ssd_volume(O1, O2, np.arange(-3, 2), 3)
+    disps = np.arange(-3, 4)
+    D = ssd_volume(O1, O2, disps, 3)
 
     # Ejercicio 13
     def optimoDisparidades(D):
@@ -226,7 +227,20 @@ def main():
 
     etiquetasOptimas = optimoDisparidades(D)
 
+    # Ejercicio 14
+    def find_corresp_aexpansion(D, initLabels, lmb,
+                                maxV):
+        from maxflow.fastmin import aexpansion_grid
+        V = np.fromfunction(lambda i, j: lmb * np.minimum(abs(i - j), maxV), (D.shape[-1], D.shape[-1]))
+        return aexpansion_grid(D, V, max_cycles=None, labels=initLabels)
 
+    X = find_corresp_aexpansion(D, etiquetasOptimas, 1, 2)
+    S = disps[X]
+
+    # Ejercicio 15
+    def plot_correspondences(image1, image2, S, H1,
+                             H2):
+        pass
 
 
 # Ejercicio 4
@@ -243,6 +257,7 @@ def projmat2f(P1, P2):
     skewM = np.matmul(Binv.transpose(), misc.skew(np.matmul(Binv, d) - np.matmul(Ainv, b)))
 
     return np.matmul(skewM, inv(A))
+
 
 # Ejercicio 5
 def f2projmat(F):

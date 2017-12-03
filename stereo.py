@@ -127,7 +127,7 @@ def plot_correspondences_TODO(image1, image2, S, H1, H2):
         ax1.plot(point[0, :], point[1, :], '.r')
 
         # TODO: Determine the correspondence of 'point' in the second image.
-        disp = np.array([[0], S[point.astype(int)[0], point.astype(int)[1]], [0]])
+        disp = np.array([S[point.astype(int)[0], point.astype(int)[1]], [0], [0]])
         correspondence = np.matmul(np.linalg.inv(H2), np.matmul(H1, point) + disp)
         # TODO: Plot the correspondence with ax2.plot.
         ax2.plot(correspondence[0, :], correspondence[1, :], '.r')

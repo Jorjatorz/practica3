@@ -130,7 +130,7 @@ def plot_correspondences_TODO(image1, image2, S, H1, H2):
         disp = np.array([S[point.astype(int)[0], point.astype(int)[1]], [0], [0]])
         correspondence = np.matmul(np.linalg.inv(H2), np.matmul(H1, point) + disp)
         # TODO: Plot the correspondence with ax2.plot.
-        ax2.plot(correspondence[0, :], correspondence[1, :], '.r')
+        ax2.plot(correspondence[0, :]/correspondence[2, :], correspondence[1, :]/correspondence[2,:], '.r')
 
         ppl.draw()
         # Ask for a new point.
@@ -219,14 +219,18 @@ def main():
         # Juntamos disparidades en una matriz de 3D
         return np.stack(C, axis=2)
 
-    disps = np.arange(-3, 4)
-    D = ssd_volume(O1, O2, disps, 3)
+    disps = np.arange(-180, -119, 2)
+    D = ssd_volume(O1, O2, disps, 9)
 
     # Ejercicio 13
     def optimoDisparidades(D):
         return np.argmin(D, axis=2)
 
     etiquetasOptimas = optimoDisparidades(D)
+    ppl.clf()
+    ppl.imshow(disps[etiquetasOptimas], cmap="gray")
+    ppl.colorbar()
+    ppl.show()
 
     # Ejercicio 14
     def find_corresp_aexpansion(D, initLabels, lmb,
@@ -235,8 +239,8 @@ def main():
         V = np.fromfunction(lambda i, j: lmb * np.minimum(abs(i - j), maxV), (D.shape[-1], D.shape[-1]))
         return aexpansion_grid(D, V, max_cycles=None, labels=initLabels)
 
-    X = find_corresp_aexpansion(D, etiquetasOptimas, 1, 2)
-    S = disps[X]
+    find_corresp_aexpansion(D, etiquetasOptimas, 1, 75)
+    S = disps[etiquetasOptimas]
 
     # Ejercicio 15
     plot_correspondences_TODO(img1, img2, S, H1,

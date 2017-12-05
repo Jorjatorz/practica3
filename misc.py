@@ -131,7 +131,7 @@ def matarray(*args, **kwargs):
     res = []
     aux = []
     for e in arr:
-        if e == sep:
+        if e is sep:
             # New row.
             if len(aux) > 0:
                 res.append(np.hstack(aux))

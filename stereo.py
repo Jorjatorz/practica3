@@ -127,10 +127,12 @@ def plot_correspondences_TODO(image1, image2, S, H1, H2):
         ax1.plot(point[0, :], point[1, :], '.r')
 
         # TODO: Determine the correspondence of 'point' in the second image.
-        disp = np.array([S[point.astype(int)[0], point.astype(int)[1]], [0], [0]])
-        correspondence = np.matmul(np.linalg.inv(H2), np.matmul(H1, point) + disp)
+        point_rectified = np.matmul(H1, point)
+        disp=np.zeros(3).reshape(3,1)
+        disp[0] = S[point_rectified.astype(int)[1], point_rectified.astype(int)[0]]
+        correspondence = np.matmul(np.linalg.inv(H2), point_rectified + disp)
         # TODO: Plot the correspondence with ax2.plot.
-        ax2.plot(correspondence[0, :]/correspondence[2, :], correspondence[1, :]/correspondence[2,:], '.r')
+        ax2.plot(correspondence[0, :], correspondence[1, :], '.r')
 
         ppl.draw()
         # Ask for a new point.
@@ -186,13 +188,15 @@ def main():
 
     # Ejercicio 5
     P1_f, P2_f = f2projmat(F)
+    # compruebo que los valores obtenidos son correctos
+    F1 = projmat2f(P1_f, P2_f)
+    np.testing.assert_allclose(F1/F1[2,2],F/F[2,2])
 
     # Ejercicio 6,7,8
-    plot_epipolar_lines_TODO(img1, img2, F)
+    plot_epipolar_lines_TODO(img1, img2, F1)
     plot_epipolar_lines_TODO(img2, img1, F.T)
 
     # Ejercicio 10
-    print('ejercicio 10')
     img1 = misc.rgb2gray(img1 / 255.0)
     img2 = misc.rgb2gray(img2 / 255.0)
     H1, H2 = misc.projmat2rectify(P1, P2,
@@ -211,16 +215,18 @@ def main():
 
     # Ejercicio 12
     def ssd_volume(im1, im2, disps, K):
+        from scipy.ndimage.interpolation import shift
         # Calculamos disparidades
         C = []
         for d in disps:
-            C.append(localssd(im1, np.roll(im2, d, axis=1), K))
+            #C.append(localssd(im1, np.roll(im2, d, axis=1), K))
+            C.append(localssd(im1, shift(im2, (0, -d), cval=-1), K))
 
         # Juntamos disparidades en una matriz de 3D
         return np.stack(C, axis=2)
 
-    disps = np.arange(-180, -119, 2)
-    D = ssd_volume(O1, O2, disps, 9)
+    disps = np.arange(-180, -119, 4)
+    D = ssd_volume(O1, O2, disps, 15)
 
     # Ejercicio 13
     def optimoDisparidades(D):
@@ -237,10 +243,17 @@ def main():
                                 maxV):
         from maxflow.fastmin import aexpansion_grid
         V = np.fromfunction(lambda i, j: lmb * np.minimum(abs(i - j), maxV), (D.shape[-1], D.shape[-1]))
+        #V = lmb * np.vectorize(lambda x: 1. if x==0 else 0.)(np.identity(D.shape[-1]))
+        #V = np.fromfunction(lambda i, j: lmb * np.minimum((i - j)**2, maxV), (D.shape[-1], D.shape[-1]))
         return aexpansion_grid(D, V, max_cycles=None, labels=initLabels)
 
-    find_corresp_aexpansion(D, etiquetasOptimas, 1, 75)
+    find_corresp_aexpansion(D, etiquetasOptimas, 20, 25)
     S = disps[etiquetasOptimas]
+    
+    ppl.clf()
+    ppl.imshow(disps[etiquetasOptimas], cmap="gray")
+    ppl.colorbar()
+    ppl.show()
 
     # Ejercicio 15
     plot_correspondences_TODO(img1, img2, S, H1,

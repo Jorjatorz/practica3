@@ -128,7 +128,7 @@ def plot_correspondences_TODO(image1, image2, S, H1, H2):
 
         # TODO: Determine the correspondence of 'point' in the second image.
         point_rectified = np.matmul(H1, point)
-        disp=np.zeros(3).reshape(3,1)
+        disp = np.zeros(3).reshape(3, 1)
         disp[0] = S[point_rectified.astype(int)[1], point_rectified.astype(int)[0]]
         correspondence = np.matmul(np.linalg.inv(H2), point_rectified + disp)
         # TODO: Plot the correspondence with ax2.plot.
@@ -190,7 +190,7 @@ def main():
     P1_f, P2_f = f2projmat(F)
     # compruebo que los valores obtenidos son correctos
     F1 = projmat2f(P1_f, P2_f)
-    np.testing.assert_allclose(F1/F1[2,2],F/F[2,2])
+    np.testing.assert_allclose(F1 / F1[2, 2], F / F[2, 2])
 
     # Ejercicio 6,7,8
     plot_epipolar_lines_TODO(img1, img2, F1)
@@ -219,7 +219,7 @@ def main():
         # Calculamos disparidades
         C = []
         for d in disps:
-            #C.append(localssd(im1, np.roll(im2, d, axis=1), K))
+            # C.append(localssd(im1, np.roll(im2, d, axis=1), K))
             C.append(localssd(im1, shift(im2, (0, -d), cval=-1), K))
 
         # Juntamos disparidades en una matriz de 3D
@@ -243,13 +243,13 @@ def main():
                                 maxV):
         from maxflow.fastmin import aexpansion_grid
         V = np.fromfunction(lambda i, j: lmb * np.minimum(abs(i - j), maxV), (D.shape[-1], D.shape[-1]))
-        #V = lmb * np.vectorize(lambda x: 1. if x==0 else 0.)(np.identity(D.shape[-1]))
-        #V = np.fromfunction(lambda i, j: lmb * np.minimum((i - j)**2, maxV), (D.shape[-1], D.shape[-1]))
+        # V = lmb * np.vectorize(lambda x: 1. if x==0 else 0.)(np.identity(D.shape[-1]))
+        # V = np.fromfunction(lambda i, j: lmb * np.minimum((i - j)**2, maxV), (D.shape[-1], D.shape[-1]))
         return aexpansion_grid(D, V, max_cycles=None, labels=initLabels)
 
     find_corresp_aexpansion(D, etiquetasOptimas, 20, 25)
     S = disps[etiquetasOptimas]
-    
+
     ppl.clf()
     ppl.imshow(disps[etiquetasOptimas], cmap="gray")
     ppl.colorbar()
